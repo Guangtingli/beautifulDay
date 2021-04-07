@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kt.mapper.IPhoneMapper">
+    <sql id="sqlPhone">
+      id,pname,pbrand,price,configuration
+    </sql>
+
+
+
+    <select id="findPhone" resultType="com.kt.entity.Phone">
+      SELECT
+      <include refid="sqlPhone"/>
+      FROM phone
+      <where>
+          <if test="pname!=null and pname!=''">AND pname LIKE CONCAT('%',#{pname},'%')</if>
+      </where>
+        LIMIT ${(page.current-1)*page.size},#{page.size}
+    </select>
+    <select id="findPhoneCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM phone
+        <where>
+            <if test="pname!=null and pname!=''">AND pname LIKE CONCAT('%',#{pname},'%')</if>
+        </where>
+    </select>
+    <delete id="delPhone">
+        DELETE FROM phone WHERE id=#{id}
+    </delete>
+    <insert id="addPhone">
+        INSERT INTO phone(
+        <include refid="sqlPhone"/>
+        )VALUES(
+        NULL,
+        #{pname},
+        #{pbrand},
+        #{price},
+        #{configuration}
+        )
+    </insert>
+    <update id="updPhone">
+      UPDATE phone SET pname= #{pname},pbrand=#{pbrand},price=#{price},configuration=#{configuration} WHERE id=#{id}
+    </update>
+</mapper>
